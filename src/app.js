@@ -11,6 +11,17 @@ const lds= require("lodash");
 
 const path =require('path');
 
+// to allow cross origin sharing 
+var cors = require('cors');
+
+ 
+var corsOptions = {
+  origin: 'http://example.com',
+  optionsSuccessStatus: 200 // some legacy browsers (IE11, various SmartTVs) choke on 204
+}
+ 
+
+
 // var enforce = require('express-sslify');
  
 
@@ -34,7 +45,6 @@ const templates_path=path.join(__dirname,"../templates/views");
 
 app.set("view engine",'ejs');
 app.set('views',templates_path);
-// ejs.registerPartials(partials_path);
 
 // use of bodyParser to get data from the route
 app.use(bodyParser.urlencoded({extended:true}));
@@ -43,6 +53,8 @@ app.use(bodyParser.urlencoded({extended:true}));
 
 app.use(express.static(static_path));
 
+
+
 // routing
 // callback for home router 
 
@@ -50,7 +62,15 @@ app.get ("/",(req,res)=>{
     res.render("home");
     
     })
-    
+
+    // callback for contacts route 
+
+    app.get("/contactus",(req,res)=>{
+        res.render("contact");
+    })
+    app.get('/contactus/:id', cors(corsOptions), function (req, res, next) {
+        res.json({msg: 'This is CORS-enabled for only example.com.'})
+      })
     
     // listening to the port on server 
     
